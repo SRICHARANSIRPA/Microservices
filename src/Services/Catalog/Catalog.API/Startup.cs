@@ -35,7 +35,7 @@ namespace Catalog.API
             });
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.Configure<ConfigurationValues>(_configuration.GetSection("ConfigurationValues"));
+            //services.Configure<ConfigurationValues>(_configuration.GetSection("ConfigurationValues"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

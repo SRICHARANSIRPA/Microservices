@@ -348,3 +348,29 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/src/mongo_data/_mdb_catalog.wt
+/src/mongo_data/WiredTigerHS.wt
+/src/mongo_data/WiredTiger.wt
+/src/mongo_data/WiredTiger.turtle
+/src/mongo_data/WiredTiger.lock
+/src/mongo_data/WiredTiger
+/src/mongo_data/storage.bson
+/src/mongo_data/sizeStorer.wt
+/src/mongo_data/mongod.lock
+/src/mongo_data/journal/WiredTigerPreplog.0000000002
+/src/mongo_data/journal/WiredTigerPreplog.0000000001
+/src/mongo_data/journal/WiredTigerLog.0000000011
+/src/mongo_data/index-6-1907921960509968280.wt
+/src/mongo_data/index-5-1907921960509968280.wt
+/src/mongo_data/index-3-1907921960509968280.wt
+/src/mongo_data/index-1-1907921960509968280.wt
+/src/mongo_data/diagnostic.data/metrics.2021-07-18T08-34-08Z-00000
+/src/mongo_data/diagnostic.data/metrics.2021-07-18T08-29-20Z-00000
+/src/mongo_data/diagnostic.data/metrics.2021-07-18T08-25-48Z-00000
+/src/mongo_data/diagnostic.data/metrics.2021-07-18T08-21-23Z-00000
+/src/mongo_data/diagnostic.data/metrics.2021-07-17T20-00-22Z-00000
+/src/mongo_data/diagnostic.data/metrics.2021-07-17T17-26-57Z-00000
+/src/mongo_data/diagnostic.data/metrics.2021-07-17T09-29-46Z-00000
+/src/mongo_data/collection-4-1907921960509968280.wt
+/src/mongo_data/collection-2-1907921960509968280.wt
+/src/mongo_data/collection-0-1907921960509968280.wt
