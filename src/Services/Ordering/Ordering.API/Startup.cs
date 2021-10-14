@@ -1,7 +1,4 @@
-using Basket.API.Configuration;
-using Basket.API.GrpcServices;
-using Basket.API.Repository;
-using Discount.Grpc.Protos;
+using EventBus.Messages.Common;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,12 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Ordering.API.EventBusConsumer;
+using Ordering.Application;
+using Ordering.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Basket.API
+namespace Ordering.API
 {
     public class Startup
     {
@@ -27,44 +27,35 @@ namespace Basket.API
 
         public IConfiguration Configuration { get; }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
-            });
-
-            //Redis Configuration
-            services.AddStackExchangeRedisCache(options => {
-                options.Configuration = Configuration.GetValue<string>("ConnectionString");
-                options.InstanceName = "RedisInstance";
-                });
-
-            //services.Configure<ConfigurationValues>(Configuration.GetSection("ConfigurationValues"));
-
-            //General Configuration
-            services.AddScoped<IBasketRepository, BasketRepository>();
-            services.AddAutoMapper(typeof(Startup));
-
-            //Grpc Configuration
-            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>
-                (options=>options.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
-
-            services.AddScoped<DiscountGrpcService>();
-             
+            services.AddApplicationServices();
+            services.AddInfraStructureServices(Configuration);
 
             //MassTransit-RabbitMQ Configuration
             services.AddMassTransit(config =>
             {
+                config.AddConsumer<BasketCheckoutConsumer>();
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(Configuration.GetValue<string>("EventBusSettings:HostAddress"));
+                    cfg.ReceiveEndpoint(EventBusConstants.BasketCheckoutQueue, c =>
+                     {
+                         c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
+                     });
                 });
             });
             services.AddMassTransitHostedService();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<BasketCheckoutConsumer>();
+
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ordering.API", Version = "v1" });
+            });
+
 
         }
 
@@ -75,7 +66,7 @@ namespace Basket.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ordering.API v1"));
             }
 
             app.UseRouting();
